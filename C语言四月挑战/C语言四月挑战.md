@@ -1396,7 +1396,111 @@ void destroyStack(Stack *stack){
 
 
 
-第12天 
+# 第12天 开心消消乐
+
+> 给定一个数组 [2, 4, 1, 3, 8, 7]
+>
+> 首先找出最大的两个元素，让其中大得元素减去小的元素；拿出元素的位置置位为0；
+>
+> [2, 4, 1, 3, 0, 0]  将差插入0元素的位置；
+>
+> 所以 [2,  4，1, 3, 1，0]
+>
+> 继续得  4 -3
+>
+> [2, 0, 1, 0, 1, 0] 将差插入0元素的位置；
+>
+> 所以[2, 1, 1, 0, 1, 0] 
+>
+> 继续得
+>
+> [0, 0, 1, 0, 1, 0] 将差插入0元素的位置；
+>
+> 所以[1, 0, 1, 0, 1, 0] 
+>
+> [1]
+
+源码分析；
+
+```c
+#include <stdio.h>
+
+
+void insert(int *array, int length, int data){
+    for(int i = 0; i < length; ++i){
+        if(array[i] == 0){
+            array[i] = data;
+            return;
+        }
+    }
+}
+
+#if 0
+// 找出数组中的最大一个值，将最大值返回，并且将该最大值所在的位置填充为零
+int searchMax(int *array, int length){
+    // 假定第一个数就是最大值
+    int max = array[0];
+
+    // 更新最大值
+    for(int i = 1; i < length; ++i){
+        if(array[i] > max){
+            max = array[i];
+        }
+    }
+
+    // 将最大值所在的位置置位为零；
+    for(int i = 0; i < length; ++i){
+        if(array[i] == max){
+            array[i] = 0;
+        }
+    }
+    //返回最大值
+    return max;
+}
+#endif
+
+int searchMax(int *array, int length){
+    int index = 0;
+    for(int i = 1; i < length; i++){
+        if(array[i] > array[index]){
+            // 更新索引
+            index = i;
+        }
+    }
+    int max = array[index];
+    array[index] = 0;
+    return max;
+}
+
+
+int lastStoneWeight(int *array, int length){
+    while(1){
+        // 找出最大值
+        int x = searchMax(array, length);
+
+        // 找出次大值
+        int y = searchMax(array, length);
+
+        if(y == 0){
+            return x;
+        }
+
+        if(x != y){
+            // 将差插入到数组中的零位置
+            insert(array, length, (x - y));
+        }
+    }
+    return 0;
+}
+
+int main(void){
+    // 定义一个数组
+    int array[] = {2, 7, 4, 1, 8, 1};
+    int result = lastStoneWeight(array, sizeof (array)/ sizeof(array[0]));
+    printf("剩余结果为：%d\n", result);
+    return 0;
+}
+```
 
 
 
